@@ -1,0 +1,67 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html ng-app="app">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link type="text/css" rel="stylesheet" href="../libs/bootstrap/css/bootstrap.css" />
+    <link type="text/css" rel="stylesheet" href="../libs/bootstrap/css/bootstrap-theme.css" />
+    <script src="../libs/angular/angular.js"></script>
+    <script src="../libs/angular/angular-touch.js"></script>
+    <script src="../libs/angular/angular-animate.js"></script>
+    <script src="../libs/angular/angular-resource.js"></script>
+    <script src="../libs/angular/bootstrap/ui-bootstrap-tpls.js"></script>
+    <script src="../libs/angular-apisp.js"></script>
+    <script>
+      var app = angular.module('app', ['ngAnimate', 'ngTouch', 'ngApisp']);
+
+      // controller
+      app.controller('MainCtrl', function ($scope, apisp){
+        $scope.user = {DisplayName: '???', department: '???'};
+        $scope.choice = "Blue. No, yellow!!!";
+
+        // retrieve the current user info
+        apisp.user({}, function(result){
+          $scope.user = result.d;
+          $scope.user.department = apisp.lookupKeyValue($scope.user.UserProfileProperties.results, 'Department');
+        });
+
+        $scope.editItem = function(item, prop){
+          item[prop] = window.prompt(prop, item[prop])
+        };
+        $scope.submitForm = function(){
+          console.log("submitForm");
+          var data = {Title: $scope.user.DisplayName, department: $scope.user.department, choice: $scope.choice};
+          apisp.saveitem({listname: $scope.listname}, data, 
+            function(result) {
+              console.log("apisp.post success");
+              console.log(result);
+              $scope.done = true;
+            }
+          );
+        };
+      });
+    </script>
+  </head>
+  <body ng-controller="MainCtrl" class="text-center">
+        <form ng-submit="submitForm()">
+          <table class="table table-bordered table-striped table-hover">
+            <tr>
+              <td>Name</td>
+              <td>Department</td>
+              <td>choice</td>
+            </tr>
+            <tr>
+              <td>{{user.DisplayName}}</td>
+              <td>{{user.department}}</td>
+              <td><input type="text" ng-model="choice"></td>
+            </tr>
+            <tr>
+              <td><input type="button" class="btn" value="Edit" ng-click="editItem(user, 'DisplayName')"></td>
+              <td><input type="button" class="btn" value="Edit" ng-click="editItem(user, 'department')"></td>
+            </tr>
+          </table>
+          <input type="submit" id="i_bt_submit" class="btn btn-default" style="width: 20vh">
+        </form>
+      </div>
+    </div>
+  </body>
+</html>
