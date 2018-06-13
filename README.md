@@ -3,7 +3,7 @@ Angular $resource module wrapping the Microsoft Sharepoint REST API
 
 ## description  
 
-Its a simpler alternative to full webAPI clients like Breeze and Swagger, with the added benefit of being relying on a built-in feature of Angular.  
+Its a simpler alternative to full webAPI clients like Breeze and Swagger, with the added benefit of relying on a built-in feature of Angular.  
 
 ## features  
 
