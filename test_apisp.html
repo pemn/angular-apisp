@@ -15,6 +15,9 @@
 
       // controller
       app.controller('MainCtrl', function ($scope, apisp){
+        // the list name goes here. In this example it should have 3 text fields:
+        // Title, department, choice
+        $scope.listname = "test_list"
         $scope.user = {DisplayName: '???', department: '???'};
         $scope.choice = "Blue. No, yellow!!!";
 
