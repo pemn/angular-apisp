@@ -1,1 +1,2 @@
-*.js,*.html linguist-language=Javascript
+*.js linguist-language=Javascript
+*.html linguist-language=Javascript
