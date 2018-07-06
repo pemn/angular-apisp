@@ -10,7 +10,7 @@
 
   angular-apisp.js
 
-  Angular $resource module wrapping the Microsoft Sharepoint REST API.
+  Angular $resouce module wrapping the Microsoft Sharepoint REST API.
   Its a simpler alternative to full webAPI clients like Breeze and Swagger,
   with the added benefit of being relying on a built-in feature of Angular
   instead of some shifty module.
@@ -23,7 +23,9 @@
   'use strict';
   if (typeof angular === 'undefined') return;
   angular.module('ngApisp', ['ngResource']).service('apisp', function $apispProvider($resource) {
+    // hardcoded uri.
     var _host = document.location.origin;
+    //var _group = "/groups/gelpf"
     // extract the group prefix from the complete url
     var _group = document.location.pathname.substr(0,document.location.pathname.indexOf("/",8));
     // TODO: use angular config() phase to set this
@@ -34,7 +36,17 @@
     var _headers = { 'Accept'         : "application/json;odata=verbose",
                      'content-type'   : "application/json;odata=verbose"
     };
-    
+    /*
+    default actions:
+    {
+      'get':    {method:'GET'},
+      'save':   {method:'POST'},
+      'query':  {method:'GET', isArray:true},
+      'remove': {method:'DELETE'},
+      'delete': {method:'DELETE'} 
+    };
+    */
+
     var _actions = {
       'user'       : {method: 'GET' , headers: _headers, url: _host + "/_api/SP.UserProfiles.PeopleManager/GetMyProperties"},
       'getlist'    : {method: 'GET' , headers: _headers, url: _site + "/lists/getbytitle(':listname')"},
@@ -51,7 +63,7 @@
 
     var _proto = $resource(_site, _paramDefaults, _actions);
     _proto.fn_error = function(result) {
-      console.log(result);
+      console.log(result)
       window.alert(result.statusText);
     };
 
@@ -79,9 +91,11 @@
       return(Value);
     };
     // initialize the context required for POST operations
-    _proto.context({target: _site}, {}, function(result) {
-      _headers["X-RequestDigest"] = result.d.GetContextWebInformation.FormDigestValue;
-    });
+    if (_group) {
+      _proto.context({target: _site}, {}, function(result) {
+        _headers["X-RequestDigest"] = result.d.GetContextWebInformation.FormDigestValue;
+      });
+    }
     return _proto;
   });
 })();
